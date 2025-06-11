@@ -2,56 +2,54 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>notlisted mag flipbook</title>
+  <title>Not Listed Mag Flipbook</title>
   <style>
-    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-    #flipbook { width: 100%; height: 100%; }
+    html, body { margin:0; padding:0; height:100%; overflow:hidden; }
+    #flipbook { width:100%; height:100%; }
     #flipbook .page canvas {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      border-radius: 8px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      border-radius:8px;
     }
   </style>
-  <script 
-src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
-  <script 
-src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
+  <!-- PDF.js e Turn.js via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
 </head>
 <body>
   <div id="flipbook"></div>
-
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const url = 
-'https://drive.google.com/uc?export=download&id=1gLw5tX0GBOkmC8ODuVnqlal7cszdnyxk';
-      const pdf = await pdfjsLib.getDocument(url).promise;
-      const container = document.getElementById('flipbook');
+  document.addEventListener('DOMContentLoaded', async () => {
+    // carrega o PDF local
+    const url = './fnmk_not%20listed%20mag.pdf';
+    const pdf = await pdfjsLib.getDocument(url).promise;
+    const container = document.getElementById('flipbook');
 
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const vp = page.getViewport({ scale: 1.5 });
-        const canvas = document.createElement('canvas');
-        canvas.width = vp.width;
-        canvas.height = vp.height;
-        await page.render({ canvasContext: canvas.getContext('2d'), 
-viewport: vp }).promise;
+    // renderiza cada página em um canvas
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const vp = page.getViewport({ scale: 1.5 });
+      const canvas = document.createElement('canvas');
+      canvas.width = vp.width;
+      canvas.height = vp.height;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
 
-        const div = document.createElement('div');
-        div.className = 'page';
-        div.appendChild(canvas);
-        container.appendChild(div);
-      }
+      const div = document.createElement('div');
+      div.className = 'page';
+      div.appendChild(canvas);
+      container.appendChild(div);
+    }
 
-      $('#flipbook').turn({
-        width: '100%',
-        height: '100%',
-        autoCenter: true,
-        display: 'double',
-        gradients: true,
-        acceleration: true,
-        elevation: 50
-      });
+    // inicializa o flipbook
+    $('#flipbook').turn({
+      width: '100%',
+      height: '100%',
+      autoCenter: true,
+      display: 'double',    // duas páginas lado a lado
+      gradients: true,
+      acceleration: true,
+      elevation: 50
     });
+  });
   </script>
 </body>
 </html>
-
